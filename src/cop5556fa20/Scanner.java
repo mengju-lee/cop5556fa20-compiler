@@ -341,8 +341,12 @@ public class Scanner {
 						tokens.add(new Token(Kind.LARROW, startPos, 2, line, startPosInLine));
 						pos++;
 						posInLine++;
-					}
-					else {
+					}else if(ch=='<') {
+						state = State.START;
+						tokens.add(new Token(Kind.LPIXEL, startPos, 2, line, startPosInLine));
+						pos++;
+						posInLine++;
+					}else {
 						state = State.START;
 						tokens.add(new Token(Kind.LT, startPos, 1, line, startPosInLine));
 					}
@@ -351,6 +355,11 @@ public class Scanner {
 					if( ch=='=' ){
 						state = State.START;
 						tokens.add(new Token(Kind.GE, startPos, 2, line, startPosInLine));
+						pos++;
+						posInLine++;
+					}else if(ch=='>') {
+						state = State.START;
+						tokens.add(new Token(Kind.RPIXEL, startPos, 2, line, startPosInLine));
 						pos++;
 						posInLine++;
 					}

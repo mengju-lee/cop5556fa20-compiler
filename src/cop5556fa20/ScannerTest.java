@@ -217,5 +217,45 @@ class ScannerTest {
 		assertEquals("Adddd", scanner.getText(t0));
 		checkNextIsEOF(scanner);
 	}
+	//RARROW
+	@Test
+	void test7() throws Exception {
+		String input = "->";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, RARROW, 0, 2, 1, 1);
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test8() throws Exception {
+		String input = "<";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, LT, 0, 1, 1, 1);
+		checkNextIsEOF(scanner);
+	}
+	//LPIXEL
+	@Test
+	void test9() throws Exception {
+		String input = "<<";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, LPIXEL, 0, 2, 1, 1);
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test10() throws Exception {
+		String input = ">>";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, RPIXEL, 0, 2, 1, 1);
+		checkNextIsEOF(scanner);
+	}
 	
 }
