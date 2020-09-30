@@ -69,6 +69,7 @@ public class Scanner {
 	public String getText(Token token) {
 		/* IMPLEMENT THIS */
 		String tok = new String(chars, token.pos, token.length);
+		/*
 		tok = tok.replace('"' , ' ');
 		tok = tok.replace('\b', 'b');
 		tok = tok.replace('\t', 't');
@@ -78,6 +79,7 @@ public class Scanner {
 		tok = tok.replace('\'', '\'');
 		tok = tok.replace('\\', '\\');
 		tok = tok.replace('\r', 'r');
+		*/
 
 		return tok;
 	}
@@ -314,14 +316,16 @@ public class Scanner {
 					}else {
 						Kind reserve = reserves.get(new String(chars, startPos, pos - startPos));
 						int con = 0;
-						con = constants.get(new String(chars, startPos, pos - startPos));
 						if( reserve != null) {
 							tokens.add(new Token(reserve, startPos, pos - startPos, line, startPosInLine));
-						}else if(con != 0) {
-							tokens.add(new Token(Kind.CONST, startPos, pos - startPos, line, startPosInLine));
 						}
 						else{
-							tokens.add(new Token(Kind.IDENT, startPos, pos - startPos, line, startPosInLine));
+							try {
+								con = constants.get(new String(chars, startPos, pos - startPos));
+								tokens.add(new Token(Kind.CONST, startPos, pos - startPos, line, startPosInLine));
+							}catch(NullPointerException e){
+								tokens.add(new Token(Kind.IDENT, startPos, pos - startPos, line, startPosInLine));
+							}
 						}
 						state = State.START;
 					}
@@ -409,9 +413,9 @@ public class Scanner {
 					}
 					else if(ch == '"' || ch == '\"'){
 						state = State.START;
-						tokens.add(new Token(Kind.STRINGLIT, startPos, pos - startPos, line, startPosInLine));
 						pos++;
 						posInLine++;
+						tokens.add(new Token(Kind.STRINGLIT, startPos, pos - startPos, line, startPosInLine));								
 					}else if(ch == '\b' || ch == '\t' || ch == '\n' || ch == '\f' || ch == '\r' || ch == '\'' || ch == '\\'){
 						throw new LexicalException(line + ":" + posInLine + " EscapeSquence " + (int)ch, pos);
 					}
@@ -443,11 +447,18 @@ public class Scanner {
 	public int intVal(Token t) throws LexicalException {
 		/* IMPLEMENT THIS */
 		int num = 0;
-		try {
-			num = Integer.parseInt(new String(chars, t.pos, t.length));
-		} catch(NumberFormatException e) {
-			throw new LexicalException( t.line + ":" + t.posInLine + " number out of range ", t.pos);
+		if(t.kind == Kind.CONST) {
+			num = constants.get(new String(chars, t.pos, t.length));
+		}else if(t.kind == Kind.INTLIT){
+			try {
+				num = Integer.parseInt(new String(chars, t.pos, t.length));
+			} catch(NumberFormatException e) {
+				throw new LexicalException( t.line + ":" + t.posInLine + " number out of range ", t.pos);
+			}
+		}else {
+			throw new LexicalException( t.line + ":" + t.posInLine + " input illegal ", t.pos);
 		}
+		
 		return num;
 	}
 	

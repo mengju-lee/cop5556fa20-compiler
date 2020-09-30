@@ -155,5 +155,67 @@ class ScannerTest {
 		show(exception);
 	}
 	
-
+	@Test
+	void test1() throws Exception {
+		String input = "·";
+		show(input);
+		Exception exception = assertThrows(LexicalException.class, () -> {new Scanner(input).scan();});
+		show(exception);
+	}
+	
+	@Test
+	void test2() throws Exception {
+		String input = "blue";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, KW_BLUE, 0, 4, 1, 1);
+		assertEquals("blue", scanner.getText(t0));
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test3() throws Exception {
+		String input = "Z";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, CONST, 0, 1, 1, 1);
+		assertEquals(255, scanner.intVal(t0));
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test4() throws Exception {
+		String input = "123";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, INTLIT, 0, 3, 1, 1);
+		assertEquals(123, scanner.intVal(t0));
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test5() throws Exception {
+		String input = "\"abcccc\"";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, STRINGLIT, 0, 8, 1, 1);
+		assertEquals("\"abcccc\"", scanner.getText(t0));
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test6() throws Exception {
+		String input = "Adddd";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, IDENT, 0, 5, 1, 1);
+		assertEquals("Adddd", scanner.getText(t0));
+		checkNextIsEOF(scanner);
+	}
+	
 }
