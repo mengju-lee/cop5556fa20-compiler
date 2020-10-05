@@ -69,6 +69,9 @@ public class Scanner {
 	public String getText(Token token) {
 		/* IMPLEMENT THIS */
 		String tok = new String(chars, token.pos, token.length);
+		if(token.kind == Kind.STRINGLIT) {
+			tok = tok.replaceAll("\"", "");
+		}
 		/*
 		tok = tok.replace('"' , ' ');
 		tok = tok.replace('\b', 'b');
@@ -235,6 +238,11 @@ public class Scanner {
 						}
 						case '#' -> {
 							tokens.add(new Token(Kind.HASH, startPos, 1, line, startPosInLine));
+							pos++;
+							posInLine++;
+						}
+						case ':' -> {
+							tokens.add(new Token(Kind.COLON, startPos, 1, line, startPosInLine));
 							pos++;
 							posInLine++;
 						}
@@ -416,7 +424,7 @@ public class Scanner {
 					}
 				}
 				case AFTER_QUOTA -> {
-					if( ch != '"' && ch != '\b' && ch != '\t' && ch != '\n' && ch != '\f' && ch != '\r' && ch != '\"' && ch != '\'' && ch != '\\'){
+					if( ch != '"' && ch != '\"' && ch != EOFchar){
 						pos++;
 						posInLine++;
 					}
@@ -425,7 +433,7 @@ public class Scanner {
 						pos++;
 						posInLine++;
 						tokens.add(new Token(Kind.STRINGLIT, startPos, pos - startPos, line, startPosInLine));								
-					}else if(ch == '\b' || ch == '\t' || ch == '\n' || ch == '\f' || ch == '\r' || ch == '\'' || ch == '\\'){
+					}else if(ch == EOFchar){
 						throw new LexicalException(line + ":" + posInLine + " EscapeSquence " + (int)ch, pos);
 					}
 				}

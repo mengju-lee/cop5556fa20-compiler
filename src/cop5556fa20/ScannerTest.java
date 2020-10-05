@@ -203,7 +203,7 @@ class ScannerTest {
 		show(input);
 		show(scanner);
 		Token t0 = checkNext(scanner, STRINGLIT, 0, 8, 1, 1);
-		assertEquals("\"abcccc\"", scanner.getText(t0));
+		assertEquals("abcccc", scanner.getText(t0));
 		checkNextIsEOF(scanner);
 	}
 	
@@ -256,6 +256,51 @@ class ScannerTest {
 		show(scanner);
 		Token t0 = checkNext(scanner, RPIXEL, 0, 2, 1, 1);
 		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test11() throws Exception {
+		String input = "\"hello\"";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		Token t0 = checkNext(scanner, STRINGLIT, 0, 7, 1, 1);
+		assertEquals("hello", scanner.getText(t0));
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	void test12() throws Exception {
+		String input = "?:@+";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		show(scanner);
+		checkNext(scanner, Q,     0, 1, 1, 1);
+		checkNext(scanner, COLON, 1, 1, 1, 2);
+		checkNext(scanner, AT,    2, 1, 1, 3);
+		checkNext(scanner, PLUS,  3, 1, 1, 4);
+		checkNextIsEOF(scanner);
+	}
+	
+	@Test
+	public void test13() throws LexicalException {
+		String input = "\" greetings  ";
+		show(input);
+		Exception exception = assertThrows(LexicalException.class, () -> {new Scanner(input).scan();});
+		show(exception);
+	}
+	
+	//
+	@Test
+	public void test14() throws LexicalException {
+		String input = "\" hello\"123\"456\"\n";
+		Scanner scanner = new Scanner(input).scan();
+		show(input);
+		Token t0 = checkNext(scanner, STRINGLIT, 0, 8, 1, 1);
+		assertEquals(" hello", scanner.getText(t0));
+		checkNext(scanner, INTLIT, 8, 3, 1, 9);
+		Token t1 = checkNext(scanner, STRINGLIT, 11, 5, 1, 12);
+		assertEquals("456", scanner.getText(t1));
 	}
 	
 }
