@@ -55,16 +55,15 @@ public class SimpleParser {
 
 	public boolean consumedAll() {
 		if (scanner.hasTokens()) { 
-			Token t = scanner.nextToken();
-			if (t.kind() != Scanner.Kind.EOF) return false;
+			//Token t = scanner.nextToken();
+			if (tok.kind() != Scanner.Kind.EOF) return false;
 		}
 		return true;
 	}
 
 
 	private void program() throws SyntaxException, LexicalException {
-		Kind kind = tok.kind();
-		switch(kind) {
+		switch(tok.kind()) {
 			case IDENT  -> {
 				consume();
 				statement();
@@ -77,8 +76,14 @@ public class SimpleParser {
 				
 				if(checkKind(Kind.SEMI)) {
 					consume();
-				}else if (checkKind(Kind.ASSIGN)) {
-					expression();
+				}else {
+					if (checkKind(Kind.ASSIGN)) {
+						consume();
+						expression();
+					}else {
+						throw new SyntaxException(tok,"Syntax Error: should have an assign or semi after typle ident");
+					}
+					
 					if(checkKind(Kind.SEMI)) {
 						consume();
 					}else {
@@ -89,6 +94,23 @@ public class SimpleParser {
 			
 			case KW_image  ->{
 				consume();
+				if(checkKind(Kind.LSQUARE)) {
+					consume();
+					expression();
+					match(Kind.COMMA,"miss comma in imagedeclaration ");
+					expression();
+					match(Kind.RSQUARE,"miss RPIXEL in imagedeclaration ");
+				}
+				
+				if(checkKind(Kind.IDENT)) {
+					consume();
+					if(checkKind(Kind.LARROW) || checkKind(Kind.ASSIGN)) {
+						consume();
+						expression();
+					}
+				}else {
+					throw new SyntaxException(tok,"Syntax Error: should have an ident in imagedeclaration");
+				}
 			}
 			
 			default ->{
@@ -227,6 +249,9 @@ public class SimpleParser {
 			case AT   -> {
 				consume();
 				primary();
+				
+			}default->{
+				throw new SyntaxException(tok,"Syntax Error: input for primary is not illegl ");
 			}
 		}
 		if(checkKind(Kind.LSQUARE)) {
@@ -283,6 +308,9 @@ public class SimpleParser {
 					expression();
 				}
 			}
+			default ->{
+				throw new SyntaxException(tok,"should be assign, larrow or rarrow after ident in statement");
+			}
 		}
 	}
 	
@@ -302,8 +330,9 @@ public class SimpleParser {
 	private void match(Kind kind, String err) throws SyntaxException {
 		if (checkKind(kind)) {
 			tok = scanner.nextToken();
+		}else {
+			throw new SyntaxException(tok, err);
 		}
-		throw new SyntaxException(tok, err);
 	}
 	
 	private void consume() throws SyntaxException {

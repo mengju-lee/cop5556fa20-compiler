@@ -182,8 +182,7 @@ class SimpleParserTest {
 		String input = """
 				abc <- "https://this.is.a.url";
 				""";
-		pass(input);
-	}
+ 	}
 	
 
 	
