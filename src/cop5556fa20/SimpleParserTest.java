@@ -182,7 +182,8 @@ class SimpleParserTest {
 		String input = """
 				abc <- "https://this.is.a.url";
 				""";
- 	}
+		pass(input);
+	}
 	
 
 	
@@ -217,6 +218,50 @@ class SimpleParserTest {
 		passExpression(input);
 	}
 	
-
+	
+	@Test
+	public void test0() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				int abcaaaaaaa;
+				string aaaaa;
+				""";
+		pass(input);
+	}
+	
+	@Test
+	public void test1() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				int abcaaaaaaa;
+				string aaaaa;
+				string
+				""";
+		fail(input);
+	}
 		
+	@Test
+	public void test2() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				int abcaaaaaaa;
+				string aaaaa;
+				8980;
+				""";
+		fail(input);
+	}
+	
+	@Test
+	public void test3() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				image[a,a] aaa <- a + b;
+				""";
+		pass(input);
+	}
+	
+	@Test
+	public void test4() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				image aaa;
+				image[a,a] aaa -> aaa;
+				""";
+		fail(input);
+	}
 }

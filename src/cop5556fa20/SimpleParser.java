@@ -67,6 +67,11 @@ public class SimpleParser {
 			case IDENT  -> {
 				consume();
 				statement();
+				if(checkKind(Kind.SEMI)) {
+					consume();
+				}else {
+					throw new SyntaxException(tok,"Syntax Error: should have an semi after statement");
+				}
 			}
 			
 			case KW_int, KW_string ->{
@@ -111,6 +116,13 @@ public class SimpleParser {
 				}else {
 					throw new SyntaxException(tok,"Syntax Error: should have an ident in imagedeclaration");
 				}
+				
+				if(checkKind(Kind.SEMI)) {
+					consume();
+				}else {
+					throw new SyntaxException(tok,"Syntax Error: should have an semi after imagedeclaration");
+				}
+				
 			}
 			
 			default ->{
