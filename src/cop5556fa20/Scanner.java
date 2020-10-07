@@ -246,6 +246,16 @@ public class Scanner {
 							pos++;
 							posInLine++;
 						}
+						case '&' -> {
+							tokens.add(new Token(Kind.AND, startPos, 1, line, startPosInLine));
+							pos++;
+							posInLine++;
+						}
+						case '|' -> {
+							tokens.add(new Token(Kind.OR, startPos, 1, line, startPosInLine));
+							pos++;
+							posInLine++;
+						}
 
 						case '0' -> {
 							tokens.add(new Token(Kind.INTLIT, startPos, 1, line, startPosInLine));
