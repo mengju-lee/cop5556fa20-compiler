@@ -264,4 +264,57 @@ class SimpleParserTest {
 				""";
 		fail(input);
 	}
+	
+	@Test
+	public void test5() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				im = *[X,Y]:: RED;
+				""";
+		pass(input);
+	}
+	@Test
+	public void test6() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				im = *[X,Y]:: <<r,g,b>>;			
+				""";
+		pass(input);
+	}
+	@Test
+	public void test7() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				im = *[X,Y]:: im0[X, Y]#red;			
+				""";
+		pass(input);
+	}
+	@Test
+	public void test8() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				im = *[X,Y]:: (im0 #red)#green;			
+				""";
+		pass(input);
+	}
+	@Test
+	public void test9() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				im = *[X,Y]: X <= Y : im0[X, Y]#red;			
+				""";
+		pass(input);
+	}
+	@Test
+	public void test10() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				a + b # red
+				""";
+		passExpression(input);
+	}
+	@Test
+	public void test11() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				b # width /2
+				""";
+		passExpression(input);
+	}
+
+	
+	
 }

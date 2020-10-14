@@ -138,14 +138,14 @@ public class SimpleParser {
 	}
 
 
-	public void expression() throws SyntaxException, LexicalException {
-		orExpression();
-		
+	public void expression() throws SyntaxException, LexicalException {		
 		if(checkKind(Kind.Q)) {
 			consume();
 			expression();
 			match(Kind.COLON,"Syntax Error: should contain : between two expression");
 			expression();
+		}else {
+			orExpression();
 		}
 	}
 	
@@ -225,13 +225,13 @@ public class SimpleParser {
 		while(checkKind(Kind.HASH)) {
 			consume();
 			attribute();
-			hashExpression();
 		}
 		
 	}
 	
-	public void primary() throws SyntaxException, LexicalException {		
+	public void primary() throws SyntaxException, LexicalException {	
 		switch(tok.kind()) {
+			
 			case INTLIT, IDENT, STRINGLIT, KW_X, KW_Y, CONST-> {
 				consume();
 			}
@@ -288,17 +288,20 @@ public class SimpleParser {
 			case ASSIGN -> {
 				consume();
 				if(checkKind(Kind.STAR)) {
+					consume();
 					constXYSelector();
-					while(checkKind(Kind.COLON)) {
+					match(Kind.COLON,"should have colon in loopstatement");
+					if(checkKind(Kind.COLON)) {
 						consume();
-						if(checkKind(Kind.COLON)) {
-							consume();
-						}else {
-							expression();
-						}
+						expression();
+					}else {
+						expression();
+						match(Kind.COLON,"should have colon in loopstatement");
+						expression();
 					}
 				}else {
 					expression();
+
 				}
 			}
 			case LARROW ->{
@@ -327,11 +330,11 @@ public class SimpleParser {
 	}
 	
 	public void constXYSelector() throws SyntaxException, LexicalException {
-		if(tok.kind() == Kind.LSQUARE  || tok.kind() == Kind.KW_X || tok.kind() == Kind.COMMA || tok.kind() == Kind.KW_Y  || tok.kind() == Kind.RSQUARE) {
-			consume();
-		}else {
-			throw new SyntaxException(tok,"token doesn't match attribute");
-		}
+			match(Kind.LSQUARE,"should have keyword x in constxyselector");
+			match(Kind.KW_X,"should have keyword x in constxyselector");
+			match(Kind.COMMA,"should have comma in constxyselector");
+			match(Kind.KW_Y,"should have keyword y in constxyselector");
+			match(Kind.RSQUARE,"should have rsquare x in constxyselector");
 	}
 	
 	private boolean checkKind(Kind kind) {
