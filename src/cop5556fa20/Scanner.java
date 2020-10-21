@@ -46,13 +46,13 @@ public class Scanner {
 		IDENT, INTLIT, STRINGLIT, CONST,
 		KW_X/* X */,  KW_Y/* Y */, KW_WIDTH/* width */,KW_HEIGHT/* height */, 
 		KW_SCREEN/* screen */, KW_SCREEN_WIDTH /* screen_width */, KW_SCREEN_HEIGHT /*screen_height */,
-		KW_image/* image */, KW_int/* int */, KW_string /* string */,
+		KW_image/* image */, KW_int/* int */, KW_string /* string */, KW_boolean /* boolean */, KW_void/* void */,
 		KW_RED /* red */,  KW_GREEN /* green */, KW_BLUE /* blue */,
 		ASSIGN/* = */, GT/* > */, LT/* < */, 
 		EXCL/* ! */, Q/* ? */, COLON/* : */, EQ/* == */, NEQ/* != */, GE/* >= */, LE/* <= */, 
 		AND/* & */, OR/* | */, PLUS/* + */, MINUS/* - */, STAR/* * */, DIV/* / */, MOD/* % */, 
 	    AT/* @ */, HASH /* # */, RARROW/* -> */, LARROW/* <- */, LPAREN/* ( */, RPAREN/* ) */, 
-		LSQUARE/* [ */, RSQUARE/* ] */, LPIXEL /* << */, RPIXEL /* >> */,  SEMI/* ; */, COMMA/* , */,  EOF
+		LSQUARE/* [ */, RSQUARE/* ] */, LPIXEL /* << */, RPIXEL /* >> */,  SEMI/* ; */, COMMA/* , */,  EOF , NOP
 	}
 
 
@@ -474,6 +474,7 @@ public class Scanner {
 	public int intVal(Token t) throws LexicalException {
 		/* IMPLEMENT THIS */
 		int num = 0;
+		
 		if(t.kind == Kind.CONST) {
 			num = constants.get(new String(chars, t.pos, t.length));
 		}else if(t.kind == Kind.INTLIT){
@@ -494,7 +495,8 @@ public class Scanner {
 	 * Included for your convenience.  
 	 * 
 	 */
-	private static HashMap<String, Integer> constants;
+	static HashMap<String, Integer> constants;
+	
 	static {
 		constants = new HashMap<String, Integer>();	
 		constants.put("Z", 255);
@@ -517,6 +519,7 @@ public class Scanner {
 	}
 
 	private static HashMap<String,Kind> reserves = new HashMap<String,Kind>();
+	
 	static {
 		reserves = new HashMap<String, Kind>();
 		reserves.put("X", Kind.KW_X);
@@ -532,6 +535,8 @@ public class Scanner {
 		reserves.put("red", Kind.KW_RED);
 		reserves.put("green", Kind.KW_GREEN);
 		reserves.put("blue", Kind.KW_BLUE);
+		reserves.put("void", Kind.KW_void);
+		reserves.put("boolean", Kind.KW_boolean);
 	}
 	/**
 	 * Returns a String representation of the list of Tokens.

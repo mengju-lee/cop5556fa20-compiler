@@ -86,7 +86,7 @@ public class SimpleParser {
 						consume();
 						expression();
 					}else {
-						throw new SyntaxException(tok,"Syntax Error: should have an assign or semi after typle ident");
+						throw new SyntaxException(tok,"Syntax Error: should have an assign or semi after type");
 					}
 					
 					if(checkKind(Kind.SEMI)) {
@@ -132,20 +132,20 @@ public class SimpleParser {
 				}
 			}
 		}
+		
 		if(!consumedAll()) {
 			program();
 		}
 	}
 
 
-	public void expression() throws SyntaxException, LexicalException {		
+	public void expression() throws SyntaxException, LexicalException {
+		orExpression();
 		if(checkKind(Kind.Q)) {
 			consume();
 			expression();
 			match(Kind.COLON,"Syntax Error: should contain : between two expression");
 			expression();
-		}else {
-			orExpression();
 		}
 	}
 	
@@ -214,6 +214,7 @@ public class SimpleParser {
 	
 	public void unaryExpressionNotPlusMinus() throws SyntaxException, LexicalException {
 		if(checkKind(Kind.EXCL)) {
+			consume();
 			unaryExpression();
 		}else {
 			hashExpression();
@@ -251,17 +252,16 @@ public class SimpleParser {
 				expression();
 				match(Kind.RPIXEL,"miss right pixel in PixelConstructor ");
 			}
-			case LSQUARE   -> {
+			case LSQUARE -> {
 				consume();
 				expression();
 				match(Kind.COMMA,"miss comma in Pixelselector ");
 				expression();
 				match(Kind.RSQUARE,"miss right pixel in Pixelselector ");
 			}
-			case AT   -> {
+			case AT -> {
 				consume();
 				primary();
-				
 			}default->{
 				throw new SyntaxException(tok,"Syntax Error: input for primary is not illegl ");
 			}

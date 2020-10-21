@@ -314,6 +314,28 @@ class SimpleParserTest {
 				""";
 		passExpression(input);
 	}
+	
+	@Test
+	public void test12() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				x = y +!-!z;
+				""";
+		pass(input);
+	}
+	@Test
+	public void test13() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				int abc = !5;
+				""";
+		pass(input);
+	}
+	@Test
+	public void test14() throws Scanner.LexicalException, SyntaxException {
+		String input = """
+				string a = 3==4+2 ? \"hello\" : \"goodbye\";
+				""";
+		pass(input);
+	}
 
 	
 	
